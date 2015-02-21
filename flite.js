@@ -1,6 +1,7 @@
 var child = require('child_process');
 var temp = require('temp');
 var fs = require('fs');
+var fb = require('flite-bin');
 
 var dep = {
   flite: false,
@@ -27,19 +28,18 @@ function init(config, cb) {
 
 function detectFeatures(cb) {
   var usage = /usage/i;
-  child.exec('flite --version', function (err, stdout) {
-    dep.flite = /flite-1\.4/.test(stdout);
+  child.exec(fb.path + '--version', function (err, stdout) {
+    dep.flite = fb.path
     if (!dep.flite) {
       dep.init = true;
-      return cb(new Error('required binary flite not available'));
+      return cb(new Error('required binary flite not available from flite-bin package. Please try "npm -install"'));
     }
-    child.exec('flite -lv', function (err, stdout) {
+    child.exec(fb.path + '-lv', function (err, stdout) {
       dep.voices = stdout.trim().split(' ').slice(2);
       child.exec('aplay --help', function (err, stdout, stderr) {
         dep.aplay = usage.test(stderr) || usage.test(stdout);
         child.exec('afplay --help', function (err, stdout, stderr) {
           dep.afplay = usage.test(stderr) || usage.test(stdout);
-
           dep.init = true;
           cb();
         });
@@ -108,7 +108,7 @@ function config(cfg) {
 }
 
 function cmd(also) {
-  var cmdStr = 'flite ';
+  var cmdStr = dep.flite;
   if (this.config.voice && this.voices.indexOf(this.config.voice) > -1) {
     cmdStr += '-voice ' + this.config.voice + ' ';
   }

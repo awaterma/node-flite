@@ -4,9 +4,13 @@
   "description": "binding for flite, a tiny text-to-speech synthesizer",
   "main": "flite.js",
   "dependencies": {
+    "flite-bin": "git+https://github.com/awaterma/flite-bin.git",
     "temp": "~0.4.0"
   },
-  "repository": {"type":"git","url":"git@github.com:jden/node-flite.git"},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:awaterman/node-flite.git"
+  },
   "keywords": [
     "flite",
     "tts",
